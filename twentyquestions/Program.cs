@@ -10,8 +10,71 @@ namespace twentyquestions
     {
         static void Main(string[] args)
         {
+            BinarySearchTree<Question> tree = new BinarySearchTree<Question>();
+
+            Console.WriteLine(int.MaxValue / 2);
+
+            Question first = new Question("is it a thing?", int.MaxValue / 2);
+
+            tree.Add(first);
+
+            BSTNode<Question> current = tree.Root;
+            BSTNode<Question> previous = null;
+            bool lastWasYes = false;
+
+            while (current != null)
+            {
+                Console.WriteLine(current.Value);
+                string yesorno = Console.ReadLine();
 
 
+                if (yesorno == "yes" || yesorno == "yeah" || yesorno == "yea" || yesorno == "ye")  //yes is left btw
+                {
+                    previous = current;
+                    current = current.leftChild;
+                    lastWasYes = true;
+                }
+                else if (yesorno == "no" || yesorno == "nah")  //therefore no is right
+                {
+                    previous = current;
+                    current = current.rightChild;
+                    lastWasYes = false;
+                }
+                else
+                {
+                    Console.WriteLine("i'm sorry i dont understand");
+                }
+
+            }
+
+            Console.WriteLine("oh no, i can't \n what was your word?");
+            string answer = Console.ReadLine();
+            Console.WriteLine("what would be a question that you would respond yes to if you were thinking about {0}?", answer);
+            string newQuestion = Console.ReadLine();
+            int newID = 0;
+            if(lastWasYes)
+            {
+                int lowerBound = tree.ToList().Where(x => x.ID < previous.Value.ID).Last().ID;
+                int upperBound = previous.Value.ID;
+                newID = lowerBound + (upperBound - lowerBound) / 2;
+            }
+            else
+            {
+                int lowerBound = previous.Value.ID;
+                int upperBound = tree.ToList().Where(x => x.ID > previous.Value.ID).First().ID;
+                newID = lowerBound + (upperBound - lowerBound) / 2;
+                        
+            }
+            tree.Add(new Question(newQuestion, newID));
+
+            
+
+            foreach (Question item in tree.ToList())
+            {
+                Console.WriteLine(item);
+            }
+            Console.ReadKey();
+            
         }
     }
 }

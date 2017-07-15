@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace twentyquestions
 {
-    class BSTNode<T> where T : IComparable
+    class BSTNode<T> where T : IComparable<T>
     {
         public T Value;
         public BSTNode<T> parent;
@@ -17,5 +17,6 @@ namespace twentyquestions
         {
             Value = value;
         }
+        
     }
 }
