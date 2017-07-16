@@ -10,10 +10,12 @@ namespace twentyquestions
     {
         public string question;
         public int ID;
-        public Question(string q, int id)
+        public bool finalAnswer;
+        public Question(string q, int id, bool finalanswer)
         {
             question = q;
             ID = id;
+            finalAnswer = finalanswer;
         }
 
         public int CompareTo(Question other)

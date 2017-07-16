@@ -14,59 +14,96 @@ namespace twentyquestions
 
             Console.WriteLine(int.MaxValue / 2);
 
-            Question first = new Question("is it a thing?", int.MaxValue / 2);
+            Question first = new Question("is it a thing?", int.MaxValue / 2, false);
 
             tree.Add(first);
 
-            BSTNode<Question> current = tree.Root;
-            BSTNode<Question> previous = null;
-            bool lastWasYes = false;
 
-            while (current != null)
+            while (true)
             {
-                Console.WriteLine(current.Value);
-                string yesorno = Console.ReadLine();
+                BSTNode<Question> current = tree.Root;
+                BSTNode<Question> previous = null;
+                bool lastWasYes = false;
 
-
-                if (yesorno == "yes" || yesorno == "yeah" || yesorno == "yea" || yesorno == "ye")  //yes is left btw
+                while (current != null)
                 {
-                    previous = current;
-                    current = current.leftChild;
-                    lastWasYes = true;
+                    Console.WriteLine(current.Value);
+                    string yesorno = Console.ReadLine();
+
+
+                    if (yesorno == "yes" || yesorno == "yeah" || yesorno == "yea" || yesorno == "ye")  //yes is left btw
+                    {
+                        previous = current;
+                        current = current.leftChild;
+                        lastWasYes = true;
+                    }
+                    else if (yesorno == "no" || yesorno == "nah")  //therefore no is right
+                    {
+                        previous = current;
+                        current = current.rightChild;
+                        lastWasYes = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("i'm sorry i dont understand");
+                    }
+
                 }
-                else if (yesorno == "no" || yesorno == "nah")  //therefore no is right
+
+                if (previous.Value.finalAnswer && lastWasYes)
                 {
-                    previous = current;
-                    current = current.rightChild;
-                    lastWasYes = false;
+                    Console.WriteLine("yay! i got it right \n would you like to play again?");
+                    string yesornah = Console.ReadLine();
+
+                    if (yesornah == "yes" || yesornah == "yeah" || yesornah == "yea" || yesornah == "ye")
+                    {
+                        Console.WriteLine("\nlet's try this again");
+                        continue;
+                    }
+                    else if (yesornah == "no" || yesornah == "nah")
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("i'm sorry i dont understand");
+                    }
+                }
+
+                Console.WriteLine("oh no, i can't \n what was your word?");
+                string answer = Console.ReadLine();
+                Console.WriteLine("what would be a question that you would respond yes to if you were thinking about {0}?", answer);
+                string newQuestion = Console.ReadLine();
+                int newID = 0;
+                int upperBound = 0;
+                int lowerBound = 0;
+                if (lastWasYes)
+                {
+                    lowerBound = tree.ToList().Where(x => x.ID < previous.Value.ID).LastOrDefault()?.ID ?? 0;
+                    upperBound = previous.Value.ID;
                 }
                 else
                 {
-                    Console.WriteLine("i'm sorry i dont understand");
+                    lowerBound = previous.Value.ID;
+                    upperBound = tree.ToList().Where(x => x.ID > previous.Value.ID).FirstOrDefault()?.ID ?? int.MaxValue;
+
                 }
-
-            }
-
-            Console.WriteLine("oh no, i can't \n what was your word?");
-            string answer = Console.ReadLine();
-            Console.WriteLine("what would be a question that you would respond yes to if you were thinking about {0}?", answer);
-            string newQuestion = Console.ReadLine();
-            int newID = 0;
-            if(lastWasYes)
-            {
-                int lowerBound = tree.ToList().Where(x => x.ID < previous.Value.ID).Last().ID;
-                int upperBound = previous.Value.ID;
                 newID = lowerBound + (upperBound - lowerBound) / 2;
-            }
-            else
-            {
-                int lowerBound = previous.Value.ID;
-                int upperBound = tree.ToList().Where(x => x.ID > previous.Value.ID).First().ID;
-                newID = lowerBound + (upperBound - lowerBound) / 2;
-                        
-            }
-            tree.Add(new Question(newQuestion, newID));
+                tree.Add(new Question(newQuestion, newID, false));
+                if(!lastWasYes)
+                {
+                    upperBound = newID;
+                    lowerBound = previous.Value.ID;
+                    tree.Add(new Question($"is it {answer}?", lowerBound + (upperBound - lowerBound) / 2, true));
+                }
+                else
+                {
+                    upperBound = newID;
+                    tree.Add(new Question($"is it {answer}?", lowerBound + (upperBound - lowerBound) / 2, true));
+                }
+                Console.WriteLine("\nlet's try this again");
 
+            }
             
 
             foreach (Question item in tree.ToList())
@@ -74,7 +111,8 @@ namespace twentyquestions
                 Console.WriteLine(item);
             }
             Console.ReadKey();
-            
         }
+            
     }
 }
+
