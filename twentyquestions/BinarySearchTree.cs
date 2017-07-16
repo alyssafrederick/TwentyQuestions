@@ -122,17 +122,16 @@ namespace twentyquestions
         {
             if (node.leftChild != null)
             {
-                TraverseInOrder(node.leftChild);
+                ToListHelper(list, node.leftChild);
             }
             list.Add(node.Value);
 
             if (node.rightChild != null)
             {
-                TraverseInOrder(node.rightChild);
+                ToListHelper(list, node.rightChild);
             }
 
         }
-
 
         public void TraversePreOrder(BSTNode<T> node)
         {
@@ -149,6 +148,29 @@ namespace twentyquestions
             }
 
         }
+
+        public List<T> ToListPreO()
+        {
+            List<T> list = new List<T>();
+            ToListPreOrder(list, Root);
+            return list;
+        }
+        public void ToListPreOrder(List<T> list, BSTNode<T> node)
+        {
+            list.Add(node.Value);
+
+            if (node.leftChild != null)
+            {
+                ToListPreOrder(list, node.leftChild);
+            }
+
+            if (node.rightChild != null)
+            {
+                ToListPreOrder(list, node.rightChild);
+            }
+        }
+
+
 
         public void TraversePostOrder(BSTNode<T> node)
         {

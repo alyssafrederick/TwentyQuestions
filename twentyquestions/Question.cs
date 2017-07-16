@@ -11,6 +11,9 @@ namespace twentyquestions
         public string question;
         public int ID;
         public bool finalAnswer;
+
+        public string fileString => $"{ID},{question},{finalAnswer}";
+
         public Question(string q, int id, bool finalanswer)
         {
             question = q;
